@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Maria 💖</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body {
+  margin:0;
+  padding:0;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  overflow:hidden;
+  font-family:sans-serif;
+  cursor: default;
+  transition: background 1s ease;
+}
+
+/* Floating hearts */
+.heart, .cursor-heart, .sparkle, .balloon, .emoji-float {
+  position: fixed;
+  pointer-events: none;
+}
+
+.heart, .emoji-float {
+  animation: floatUp 5s linear infinite;
+}
+
+.cursor-heart {
+  animation: none;
+}
+
+.balloon {
+  bottom:-100px;
+  font-size:2rem;
+  animation: rise 7s linear forwards;
+}
+
+.sparkle {
+  font-size:1.5rem;
+  animation:sparkleAnim 1s linear infinite;
+}
+
+.emoji-float {
+  font-size:2.5rem;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(100vh) scale(1); opacity:1; }
+  50% { transform: scale(1.3); }
+  100% { transform: translateY(-10vh) scale(1); opacity:0; }
+}
+
+@keyframes rise {
+  0% { bottom:-100px; transform: translateX(0) rotate(0deg);}
+  100% { bottom:100vh; transform: translateX(50px) rotate(360deg);}
+}
+
+@keyframes sparkleAnim {
+  0% {opacity:0; transform:scale(0);}
+  50% {opacity:1; transform:scale(1.5);}
+  100% {opacity:0; transform:scale(0);}
+}
+
+#mainContent {
+  background:white;
+  padding:2rem;
+  border-radius:2rem;
+  box-shadow:0 10px 40px rgba(0,0,0,0.3);
+  max-width:400px;
+  text-align:center;
+  z-index:10;
+}
+
+#finalScreen {
+  display:none;
+  position:fixed;
+  top:0; left:0; width:100%; height:100%;
+  background:linear-gradient(135deg, #ff9a9e, #fad0c4);
+  color:white;
+  font-size:2rem;
+  font-weight:bold;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction: column;
+  z-index:999;
+  text-align:center;
+  padding:20px;
+}
+
+#finalMessage {
+  margin-top:20px;
+  font-size:2rem;
+  text-shadow:2px 2px 15px #ff69b4;
+}
+
+button{
+  padding:0.7rem 1.5rem;
+  background:#ff69b4;
+  color:white;
+  font-weight:bold;
+  border-radius:1rem;
+  border:none;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover{
+  background:#ff1493;
+}
+</style>
+</head>
+
+<body>
+
+<div id="mainContent">
+<h1 class="text-3xl font-extrabold text-pink-500 mb-4">🎂 Happy Birthday Maria 💖 🎂</h1>
+<p id="message" class="text-lg text-gray-700 mb-6"></p>
+<div class="text-5xl mb-6">🎉🎈🎁</div>
+<button id="nextBtn" onclick="nextStep()">Start Surprise 🎊</button>
+<p id="secret" class="hidden text-pink-600 mt-4 font-semibold">💖 You are my everything 💖</p>
+</div>
+
+<div id="finalScreen">
+<div id="finalMessage">🎉🎊 Hooray! You finished the birthday surprise! 💖</div>
+<div style="font-size:1.5rem;margin-top:10px;">Thank you for celebrating Maria! 🎁</div>
+</div>
+
+<audio id="bgMusic" src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" autoplay loop></audio>
+
+<script>
+let step=0;
+const messages=[
+"Today is all about you, Maria 💕",
+"Tumi amar jonne onek special 🥺💖",
+"Tumi eto cute j ami ar ki bolbo ☺️",
+"Ami chai tumi sob somoy emni happy thako 🌸",
+"Happy Birthday once again, amar favourite person 💝"
+];
+
+const backgrounds=[
+"linear-gradient(135deg, #ff9a9e, #fad0c4)",
+"linear-gradient(135deg, #a1c4fd, #c2e9fb)",
+"linear-gradient(135deg, #fbc2eb, #a6c1ee)",
+"linear-gradient(135deg, #fdcbf1, #e6dee9)",
+"linear-gradient(135deg, #ffe29f, #ffa99f)"
+];
+
+function typeText(el,text,speed=40){
+  let i=0; el.innerHTML="";
+  let typing=setInterval(()=>{
+    el.innerHTML+=text.charAt(i);
+    i++; if(i>=text.length) clearInterval(typing);
+  },speed);
+}
+
+function createHeart(){let h=document.createElement("div");h.className="heart";h.innerHTML="💖";h.style.left=Math.random()*100+"vw";h.style.fontSize=(Math.random()*20+20)+"px";document.body.appendChild(h);setTimeout(()=>h.remove(),5000);}
+function createBalloon(){let b=document.createElement("div");b.className="balloon";b.innerHTML="🎈";b.style.left=Math.random()*90+"vw";document.body.appendChild(b);setTimeout(()=>b.remove(),7000);}
+function createSparkle(){let s=document.createElement("div");s.className="sparkle";s.innerHTML="✨";s.style.left=Math.random()*100+"vw";s.style.top=Math.random()*80+"vh";document.body.appendChild(s);setTimeout(()=>s.remove(),1000);}
+function createEmoji(){let e=document.createElement("div");e.className="emoji-float";e.innerHTML=["🎁","🎉","💝","🎂"][Math.floor(Math.random()*4)];e.style.left=Math.random()*100+"vw";document.body.appendChild(e);setTimeout(()=>e.remove(),4000);}
+
+function nextStep(){
+  document.getElementById("bgMusic").play();
+  if(step<messages.length){
+    typeText(document.getElementById("message"),messages[step]);
+    document.body.style.background=backgrounds[step];
+    confetti({particleCount:120,spread:100,origin:{y:0.6}});
+    for(let i=0;i<5;i++) createHeart();
+    for(let i=0;i<3;i++) createBalloon();
+    for(let i=0;i<7;i++) createSparkle();
+    for(let i=0;i<4;i++) createEmoji();
+    step++;
+    if(step===messages.length) document.getElementById("nextBtn").innerText="Finish 🎉";
+    setTimeout(()=>{if(step<messages.length) nextStep()},3000);
+  } else {showFinalScreen();}
+}
+
+function showFinalScreen(){
+  document.getElementById("mainContent").style.display="none";
+  const finalScreen=document.getElementById("finalScreen");
+  finalScreen.style.display="flex";
+
+  // continuous confetti + animations
+  setInterval(()=>{ confetti({particleCount:300,spread:150,origin:{x:Math.random(),y:0.6}}); },1000);
+  setInterval(()=>{ createHeart(); createBalloon(); createSparkle(); createEmoji(); },400);
+
+  typeText(document.getElementById("finalMessage"),"🎉🎊 Hooray! You finished the birthday surprise! 💖",50);
+
+  finalScreen.addEventListener("click",()=>{
+    typeText(document.getElementById("finalMessage"),"💖 You are my treasure Maria! 💕🥰",50);
+    confetti({particleCount:400,spread:200});
+  });
+}
+
+// initial message
+typeText(document.getElementById("message"),"Click the button for a surprise Maria 🎁");
+
+// floating hearts continuously
+setInterval(createHeart,600);
+
+// cursor-follow hearts
+document.body.addEventListener("mousemove",(e)=>{
+  let h=document.createElement("div");h.className="cursor-heart";h.innerHTML="💖";h.style.left=e.clientX+"px";h.style.top=e.clientY+"px";h.style.fontSize=(Math.random()*15+10)+"px";document.body.appendChild(h);setTimeout(()=>h.remove(),1000);
+});
+
+// secret long press
+let timer;
+document.body.addEventListener("mousedown",()=>{timer=setTimeout(()=>{document.getElementById("secret").classList.remove("hidden");},1500);});
+document.body.addEventListener("mouseup",()=>clearTimeout(timer));
+</script>
+
+</body>
+</html>
